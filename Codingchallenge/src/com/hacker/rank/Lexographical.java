@@ -22,6 +22,7 @@ public class Lexographical {
         String output2 = B.substring(0, 1).toUpperCase() + B.substring(1);
         System.out.println(output1+" "+output2);
         System.out.println("successfully completed");
+        System.out.println("");
 
 	}
 
