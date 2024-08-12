@@ -1,1 +1,3 @@
-
+select case when a<=0 or b<=0 or c<=0 then 'Not A Triangle' when a+b <= c or a+c <= b or b+c <= a then 'Not A Triangle' when a=b and b=c then 'Equilateral' when a=b or b=c or a=c then 'Isosceles' else 'Scalene' end as T_type from Triangles;
+select concat(Name,'(',left(Occupation,1),')')from OCCUPATIONS order by Name; select concat("There are a total of ",count(Occupation)," ",lower(Occupation),'s',".") from OCCUPATIONs group by Occupation order by count(Occupation), Occupation;
+SELECT Min(CASE WHEN occupation = 'Doctor' THEN name END) AS Doctor, Min(CASE WHEN occupation = 'Professor' THEN name END) AS Professor, Min(CASE WHEN occupation = 'Singer' THEN name END) AS Singer, Min(CASE WHEN occupation = 'Actor' THEN name END) AS Actor FROM ( SELECT name, occupation, ROW_NUMBER() OVER (PARTITION BY occupation ORDER BY name) AS row_num FROM OCCUPATIONS ) as subquery GROUP BY row_num ORDER BY row_num;
