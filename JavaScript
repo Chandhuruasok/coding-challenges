@@ -64,3 +64,35 @@ console.log(nums1.last());
 
 const nums2 = [];
 console.log(nums2.last()); 
+4.var checkIfInstanceOf = function(obj, classFunction) {
+    // Check if the classFunction is a function
+    if (typeof classFunction !== 'function') {
+        return false;
+    }
+
+    // Check if obj is an instance of classFunction or its superclass
+    // Special case for primitives
+    if (obj === null || obj === undefined) {
+        return false;
+    }
+
+    if (typeof obj !== 'object') {
+        // For primitives, check if the classFunction is a constructor function
+        // and if obj's type corresponds to the classFunction
+        return classFunction === Number && typeof obj === 'number' ||
+               classFunction === String && typeof obj === 'string' ||
+               classFunction === Boolean && typeof obj === 'boolean';
+    }
+
+    // Use the instanceof operator to check inheritance
+    return obj instanceof classFunction;
+};
+
+// Example usage
+class Animal {}
+class Dog extends Animal {}
+
+console.log(checkIfInstanceOf(new Date(), Date)); // true
+console.log(checkIfInstanceOf(new Dog(), Animal)); // true
+console.log(checkIfInstanceOf(Date, Date)); // false
+console.log(checkIfInstanceOf(5, Number)); // true
