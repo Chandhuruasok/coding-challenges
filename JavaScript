@@ -96,3 +96,74 @@ console.log(checkIfInstanceOf(new Date(), Date)); // true
 console.log(checkIfInstanceOf(new Dog(), Animal)); // true
 console.log(checkIfInstanceOf(Date, Date)); // false
 console.log(checkIfInstanceOf(5, Number)); // true
+5.var TimeLimitedCache = function() {
+    this.cache = new Map(); // To store key-value pairs and their expiration times
+};
+
+/** 
+ * @param {number} key
+ * @param {number} value
+ * @param {number} duration time until expiration in ms
+ * @return {boolean} if un-expired key already existed
+ */
+TimeLimitedCache.prototype.set = function(key, value, duration) {
+    const now = Date.now();
+    const expiryTime = now + duration;
+
+    // Check if the key already exists and is still valid
+    let isUpdated = false;
+    if (this.cache.has(key)) {
+        const existingEntry = this.cache.get(key);
+        if (existingEntry.expiry > now) {
+            // Key exists and is still valid, so the entry is updated
+            isUpdated = true;
+        }
+    }
+
+    // Update or add the key with the new value and expiry time
+    this.cache.set(key, { value, expiry: expiryTime });
+    return isUpdated;
+};
+
+/** 
+ * @param {number} key
+ * @return {number} value associated with key
+ */
+TimeLimitedCache.prototype.get = function(key) {
+    const now = Date.now();
+    if (this.cache.has(key)) {
+        const entry = this.cache.get(key);
+        if (entry.expiry > now) {
+            // Key is valid, return the value
+            return entry.value;
+        } else {
+            // Key has expired, remove it from the cache
+            this.cache.delete(key);
+        }
+    }
+    return -1; // Key does not exist or has expired
+};
+
+/** 
+ * @return {number} count of non-expired keys
+ */
+TimeLimitedCache.prototype.count = function() {
+    const now = Date.now();
+    let count = 0;
+    for (let [key, entry] of this.cache) {
+        if (entry.expiry > now) {
+            count++;
+        } else {
+            // Remove expired keys
+            this.cache.delete(key);
+        }
+    }
+    return count;
+};
+
+// Example usage
+const timeLimitedCache = new TimeLimitedCache();
+console.log(timeLimitedCache.set(1, 42, 1000)); // false
+console.log(timeLimitedCache.get(1)); // 42
+console.log(timeLimitedCache.count()); // 1
+
